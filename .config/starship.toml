@@ -1,0 +1,37 @@
+# Configuration for Starship prompt
+
+[character]
+success_symbol = "[➜](bold green)"
+error_symbol = "[✗](bold red)"
+
+[git_branch]
+symbol = "🌱 "
+
+[git_status]
+conflicted = "[✗](bold red)"
+ahead = "↑"
+behind = "↓"
+diverged = "⇕"
+untracked = "…"
+
+[time]
+format = "[$time]($style) "
+style = "bold yellow"
+
+[username]
+style = "bold cyan"
+
+[hostname]
+style = "bold magenta"
+
+[directory]
+style = "bold blue"
+format = "[$path]($style) " 
+
+[cmd_duration]
+format = "[$duration]($style) "
+style = "bold white"
+
+[git_state]
+format = "[$state]($style) "
+style = "bold red"
