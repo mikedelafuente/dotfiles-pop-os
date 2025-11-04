@@ -5,3 +5,7 @@
 # Please adapt and uncomment the following lines:
 #	name = Mike de la Fuente
 #	email = mike.delafuente@gmail.com
+[core]
+	editor = nvim
+[init]
+	defaultBranch = main

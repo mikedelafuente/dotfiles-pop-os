@@ -24,26 +24,44 @@ print_tool_setup_start "Linking dotfiles"
 
 # Create symbolic links for dotfiles in the home directory
 
-DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/home"
+HOME_DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/home"
+CONFIG_DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/.config"
 
-ln -sf "$DOTFILES_DIR/.bashrc" ~/.bashrc
-ln -sf "$DOTFILES_DIR/.profile" ~/.profile
-ln -sf "$DOTFILES_DIR/.gitconfig" ~/.gitconfig
-ln -sf "$DOTFILES_DIR/.gitignore_global" ~/.gitignore_global
 
-# Link .config files
-mkdir -p ~/.config/Code/User
-mkdir -p ~/.config/nvim/lua/plugins
-mkdir -p ~/.config/lazydocker
-mkdir -p ~/.config/lazygit
+for file in .bashrc .profile .gitconfig .gitignore_global; do
+  target="$HOME/$file"
+  source_file="$HOME_DOTFILES_DIR/$file"
+  if [ -e "$target" ] && [ ! -L "$target" ]; then
+    echo "Warning: $target exists and is not a symlink."
+    echo "Backing up existing $target to $target.backup"
+    mv "$target" "$target.backup"
+  elif [ -L "$target" ]; then
+    echo "Overwriting existing symlink $target"
+  fi
+  ln -sf "$source_file" "$target"
+done
 
-ln -sf "$DOTFILES_DIR/.config/Code/User/settings.json" ~/.config/Code/User/settings.json
-# ln -sf "$DOTFILES_DIR/.config/nvim/init.lua" ~/.config/nvim/init.lua
-# ln -sf "$DOTFILES_DIR/.config/nvim/lua/config/lazy.lua" ~/.config/nvim/lua/config/lazy.lua
-ln -sf "$DOTFILES_DIR/.config/lazydocker/config.yml" ~/.config/lazydocker/config.yml
-ln -sf "$DOTFILES_DIR/.config/lazygit/config.yml" ~/.config/lazygit/config.yml
-ln -sf "$DOTFILES_DIR/.config/obsidian" ~/.config/obsidian
-ln -sf "$DOTFILES_DIR/.config/openvpn" ~/.config/openvpn
-ln -sf "$DOTFILES_DIR/.config/starship.toml" ~/.config/starship.toml
+# iterate over all files in the .config directory recursively and create symlinks
+# Create directories as needed
+CONFIG_SOURCE_DIR="$CONFIG_DOTFILES_DIR"
+CONFIG_TARGET_DIR="$HOME/.config"
+mkdir -p "$CONFIG_TARGET_DIR"
+
+find "$CONFIG_SOURCE_DIR" -type f | while read -r file; do
+  relative_path="${file#$CONFIG_SOURCE_DIR/}"
+  target="$CONFIG_TARGET_DIR/$relative_path"
+  source_file="$file"
+  target_dir="$(dirname "$target")"
+  mkdir -p "$target_dir"
+  if [ -e "$target" ] && [ ! -L "$target" ]; then
+    echo "Warning: $target exists and is not a symlink."
+    echo "Backing up existing $target to $target.backup"
+    mv "$target" "$target.backup"
+  elif [ -L "$target" ]; then
+    echo "Overwriting existing symlink $target"
+  fi
+  ln -sf "$source_file" "$target"
+done
+
 
 print_tool_setup_complete "Linking dotfiles"

@@ -35,3 +35,4 @@ style = "bold white"
 [git_state]
 format = "[$state]($style) "
 style = "bold red"
+

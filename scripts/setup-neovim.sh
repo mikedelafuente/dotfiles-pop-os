@@ -38,12 +38,21 @@ if [ ! -f "$HOME/.config/nvim/lua/config/lazy.lua" ]; then
   print_info_message "Installing Lazy.nvim"
   # required
   print_info_message "Backing up existing Neovim configuration if it exists."
-  mv ~/.config/nvim{,.bak}
+  if [ -d "~/.config/nvim" ] || [ -d "~/.local/share/nvim" ] || [ -d "~/.local/state/nvim" ] || [ -d "~/.cache/nvim" ]; then
+    print_action_message "Backing up existing Neovim configuration directories to *.bak"
+    mv ~/.config/nvim{,.bak}
+  fi
 
   # optional but recommended
-  mv ~/.local/share/nvim{,.bak}
-  mv ~/.local/state/nvim{,.bak}
-  mv ~/.cache/nvim{,.bak}
+  if [ -d "~/.local/share/nvim" ]; then
+    mv ~/.local/share/nvim{,.bak}
+  fi
+  if [ -d "~/.local/state/nvim" ]; then
+    mv ~/.local/state/nvim{,.bak}
+  fi
+  if [ -d "~/.cache/nvim" ]; then
+    mv ~/.cache/nvim{,.bak}
+  fi  
 
   git clone https://github.com/LazyVim/starter ~/.config/nvim
 

@@ -116,8 +116,7 @@ print_line_break "Cleaning up"
 sudo apt autoremove -y
 
 print_line_break "Bootstrap completed. Please restart your terminal."
-echo "Display server protocol: $XDG_SESSION_TYPE"
+
 echo "Current user: $(whoami)"
 echo "Home directory: $HOME"
 echo "Shell: $SHELL"
-echo "Script directory: $(dirname -- "${BASH_SOURCE[0]}")"
