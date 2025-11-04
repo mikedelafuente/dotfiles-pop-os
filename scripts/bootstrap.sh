@@ -23,7 +23,16 @@ echo "Home directory of real user: $(eval echo ~${SUDO_USER})"
 echo "Shell: $SHELL"
 echo "Script directory: $(dirname -- "${BASH_SOURCE[0]}")"
 echo "----------------------------------------"
-exit 1
+
+if [ "$(whoami)" != "${SUDO_USER:-$(whoami)}" ]; then
+    echo "Please start this script without sudo."
+    exit 1
+fi
+
+# Run a sudo command early to prompt for the password
+sudo -v
+
+
 # --------------------------
 # Import Common Header 
 # --------------------------
@@ -77,41 +86,41 @@ print_line_break "Installing essential packages"
 sudo apt install -y git curl wget 
 
 # Set up Git configuration
-sudo bash "$DF_SCRIPT_DIR/setup-git.sh" "$FULL_NAME" "$EMAIL_ADDRESS"
+bash "$DF_SCRIPT_DIR/setup-git.sh" "$FULL_NAME" "$EMAIL_ADDRESS"
 
 # Setup Fonts
-sudo bash "$DF_SCRIPT_DIR/setup-fonts.sh"
+bash "$DF_SCRIPT_DIR/setup-fonts.sh"
 
 # Setup Bash
-sudo bash "$DF_SCRIPT_DIR/setup-bash.sh"
+bash "$DF_SCRIPT_DIR/setup-bash.sh"
 
 # Before setting up Alacritty, ensure Rust is installed
-sudo bash "$DF_SCRIPT_DIR/setup-rust.sh"
+bash "$DF_SCRIPT_DIR/setup-rust.sh"
 
 # Before setting up Alacritty, ensure that VS Code is installed
-sudo bash "$DF_SCRIPT_DIR/setup-vscode.sh"
+bash "$DF_SCRIPT_DIR/setup-vscode.sh"
 
 # Setup a terminal emulator - Alacritty in this case
-sudo bash "$DF_SCRIPT_DIR/setup-alacritty.sh"
+bash "$DF_SCRIPT_DIR/setup-alacritty.sh"
 
 # Setup Neovim and Lazyvim
-sudo bash "$DF_SCRIPT_DIR/setup-neovim.sh"
+bash "$DF_SCRIPT_DIR/setup-neovim.sh"
 
 # Setup Mullvad VPN
-sudo bash "$DF_SCRIPT_DIR/setup-mullvad.sh"
+bash "$DF_SCRIPT_DIR/setup-mullvad.sh"
 
 # run the setup-docker.sh script to set up Docker using sudo rights
 # Make sure to run the setup docker.sh script from the correct path - which should be the same directory as this script
-sudo bash "$DF_SCRIPT_DIR/setup-docker.sh"
+bash "$DF_SCRIPT_DIR/setup-docker.sh"
 
 # Install Node.js and npm
-sudo bash "$DF_SCRIPT_DIR/setup-node.sh"
+bash "$DF_SCRIPT_DIR/setup-node.sh"
 
 # Install .NET SDK and Rider
-sudo bash "$DF_SCRIPT_DIR/setup-dotnet-rider.sh" "$DOTNET_CORE_SDK_VERSION"
+bash "$DF_SCRIPT_DIR/setup-dotnet-rider.sh" "$DOTNET_CORE_SDK_VERSION"
 
 # Link configuration files
-sudo bash "$DF_SCRIPT_DIR/link-dotfiles.sh"
+bash "$DF_SCRIPT_DIR/link-dotfiles.sh"
 
 # Clean up
 print_line_break "Cleaning up"
