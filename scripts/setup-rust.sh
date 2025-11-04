@@ -27,7 +27,7 @@ print_tool_setup_start "Rust and Cargo"
 if ! command -v cargo &> /dev/null; then
     print_info_message "Installing Rust and Cargo"
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-    source "$HOME/.cargo/env"
+    source "$USER_HOME_DIR/.cargo/env"
 else
     print_info_message "Rust and Cargo are already installed. Skipping installation."
 fi

@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# -------------------------
+# Allow for the profile name to be passed as an argument
+# -------------------------
+PROFILE_NAME="${1:-dela}"
+
 # --------------------------
 # Import Common Header 
 # --------------------------
@@ -23,14 +28,19 @@ fi
 print_tool_setup_start "Linking dotfiles"
 
 # Create symbolic links for dotfiles in the home directory
-
-HOME_DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/home"
-CONFIG_DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/.config"
+DOTFILES_HOME_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/home"
+DOTFILES_CONFIG_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/.config"
 
 
 for file in .bashrc .profile .gitconfig .gitignore_global; do
-  target="$HOME/$file"
-  source_file="$HOME_DOTFILES_DIR/$file"
+  target="$USER_HOME_DIR/$file"
+  source_file="$DOTFILES_HOME_DIR/$file"
+  
+  # Add debug output to your script
+  echo "DOTFILES_HOME_DIR: $DOTFILES_HOME_DIR"
+  echo "Source file: $source_file"
+  echo "Target: $target"
+
   if [ -e "$target" ] && [ ! -L "$target" ]; then
     echo "Warning: $target exists and is not a symlink."
     echo "Backing up existing $target to $target.backup"
@@ -43,8 +53,8 @@ done
 
 # iterate over all files in the .config directory recursively and create symlinks
 # Create directories as needed
-CONFIG_SOURCE_DIR="$CONFIG_DOTFILES_DIR"
-CONFIG_TARGET_DIR="$HOME/.config"
+CONFIG_SOURCE_DIR="$DOTFILES_CONFIG_DIR"
+CONFIG_TARGET_DIR="$USER_HOME_DIR/.config"
 mkdir -p "$CONFIG_TARGET_DIR"
 
 find "$CONFIG_SOURCE_DIR" -type f | while read -r file; do

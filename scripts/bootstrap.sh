@@ -18,10 +18,12 @@ echo "Starting bootstrap process... pwd is $(pwd)"
 echo "Display server protocol: $XDG_SESSION_TYPE"
 echo "Current user: $(whoami)"
 echo "Home directory: $HOME"
+echo "Real user: $SUDO_USER"
+echo "Home directory of real user: $(eval echo ~${SUDO_USER})" 
 echo "Shell: $SHELL"
 echo "Script directory: $(dirname -- "${BASH_SOURCE[0]}")"
 echo "----------------------------------------"
-
+exit 1
 # --------------------------
 # Import Common Header 
 # --------------------------
@@ -117,6 +119,4 @@ sudo apt autoremove -y
 
 print_line_break "Bootstrap completed. Please restart your terminal."
 
-echo "Current user: $(whoami)"
-echo "Home directory: $HOME"
 echo "Shell: $SHELL"

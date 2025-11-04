@@ -34,29 +34,29 @@ else
 fi
 
 # install lazy neovim setup
-if [ ! -f "$HOME/.config/nvim/lua/config/lazy.lua" ]; then
+
+if [ ! -f "$USER_HOME_DIR/.config/nvim/lua/config/lazy.lua" ]; then
   print_info_message "Installing Lazy.nvim"
   # required
   print_info_message "Backing up existing Neovim configuration if it exists."
-  if [ -d "~/.config/nvim" ] || [ -d "~/.local/share/nvim" ] || [ -d "~/.local/state/nvim" ] || [ -d "~/.cache/nvim" ]; then
+  if [ -d "$USER_HOME_DIR/.config/nvim" ] || [ -d "$USER_HOME_DIR/.local/share/nvim" ] || [ -d "$USER_HOME_DIR/.local/state/nvim" ] || [ -d "$USER_HOME_DIR/.cache/nvim" ]; then
     print_action_message "Backing up existing Neovim configuration directories to *.bak"
-    mv ~/.config/nvim{,.bak}
+    mv "$USER_HOME_DIR/.config/nvim"{,.bak}
   fi
 
   # optional but recommended
-  if [ -d "~/.local/share/nvim" ]; then
-    mv ~/.local/share/nvim{,.bak}
+  if [ -d "$USER_HOME_DIR/.local/share/nvim" ]; then
+    mv "$USER_HOME_DIR/.local/share/nvim"{,.bak}
   fi
-  if [ -d "~/.local/state/nvim" ]; then
-    mv ~/.local/state/nvim{,.bak}
+  if [ -d "$USER_HOME_DIR/.local/state/nvim" ]; then
+    mv "$USER_HOME_DIR/.local/state/nvim"{,.bak}
   fi
-  if [ -d "~/.cache/nvim" ]; then
-    mv ~/.cache/nvim{,.bak}
+  if [ -d "$USER_HOME_DIR/.cache/nvim" ]; then
+    mv "$USER_HOME_DIR/.cache/nvim"{,.bak}
   fi  
 
-  git clone https://github.com/LazyVim/starter ~/.config/nvim
-
-  rm -rf ~/.config/nvim/.git
+  git clone https://github.com/LazyVim/starter "$USER_HOME_DIR/.config/nvim"
+  rm -rf "$USER_HOME_DIR/.config/nvim/.git"
 
   print_action_message "Start nvim and then run ':LazyHealth' to check if everything is set up correctly."
 
@@ -65,6 +65,6 @@ else
 fi
 
 # Create the necessary directories for Neovim configuration
-mkdir -p ~/.config/nvim/lua/plugins
+mkdir -p "$USER_HOME_DIR/.config/nvim/lua/plugins"
 
 print_tool_setup_complete "Neovim"

@@ -2,6 +2,12 @@
 set -euo pipefail
 
 echo "Sourcing dotheader.sh..."
+echo "Current user: $(whoami)"
+echo "Real user: ${SUDO_USER:-$(whoami)}" 
+
+# Set a USER_HOME_DIR variable and export it for use in other scripts
+export USER_HOME_DIR="$(eval echo ~${SUDO_USER:-$(whoami)})"
+echo "USER_HOME_DIR is set to: $USER_HOME_DIR"
 
 # use parameter expansion to avoid "unbound variable" with set -u
 if [ -z "${DF_SCRIPT_DIR:-}" ]; then

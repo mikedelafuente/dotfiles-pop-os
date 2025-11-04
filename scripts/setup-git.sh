@@ -57,19 +57,19 @@ git config --global init.defaultBranch main
 
 # Check to see if SSH keys already exist
 
-if [ -f ~/.ssh/id_ed25519 ]; then
+if [ -f "$USER_HOME_DIR/.ssh/id_ed25519" ]; then
     echo "SSH key already exists. Skipping key generation."
 else
     echo "Generating new SSH key."
 
     # Create SSH keys for GitHub using Ed25519 without passphrase
-    ssh-keygen -t ed25519 -C "$EMAIL_ARG" -f ~/.ssh/id_ed25519 -N ""
+    ssh-keygen -t ed25519 -C "$EMAIL_ARG" -f "$USER_HOME_DIR/.ssh/id_ed25519" -N ""
     # Add SSH key to ssh-agent
     eval "$(ssh-agent -s)"
-    ssh-add ~/.ssh/id_ed25519
+    ssh-add "$USER_HOME_DIR/.ssh/id_ed25519"
     # Display the public key for GitHub
     echo "Your public SSH key is:"
-    cat ~/.ssh/id_ed25519.pub
+    cat "$USER_HOME_DIR/.ssh/id_ed25519.pub"
     echo "Copy this key to your GitHub account."
 fi
 

@@ -24,13 +24,12 @@ print_tool_setup_start "Fonts"
 
 # Update this array to install different fonts if desired
 NERD_FONTS=("Meslo" "Ubuntu" "FiraCode" "JetBrainsMono" "Hack")
-
 # iterate through the array and install each font
 for FONT in "${NERD_FONTS[@]}"; do
-    if [ ! -d "$HOME/.local/share/fonts/NerdFonts/$FONT" ]; then
+    if [ ! -d "$USER_HOME_DIR/.local/share/fonts/NerdFonts/$FONT" ]; then
         print_info_message "Installing $FONT Nerd Font"
-        mkdir -p "$HOME/.local/share/fonts/NerdFonts/$FONT"
-        cd "$HOME/.local/share/fonts/NerdFonts/$FONT" || exit 1
+        mkdir -p "$USER_HOME_DIR/.local/share/fonts/NerdFonts/$FONT"
+        cd "$USER_HOME_DIR/.local/share/fonts/NerdFonts/$FONT" || exit 1
         wget "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/$FONT.zip"
         unzip "$FONT.zip"
         rm "$FONT.zip"
