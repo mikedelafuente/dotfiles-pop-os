@@ -1,5 +1,24 @@
 #!/bin/bash
 
+# --- Import Common Header --- 
+
+# add header file
+CURRENT_FILE_DIR="$(cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd)"
+
+# source header (uses SCRIPT_DIR and loads lib.sh)
+if [ -r "$CURRENT_FILE_DIR/dotheader.sh" ]; then
+  # shellcheck source=/dev/null
+  source "$CURRENT_FILE_DIR/dotheader.sh"
+else
+  echo "Missing header file: $CURRENT_FILE_DIR/dotheader.sh"
+  exit 1
+fi
+
+# --- End Import Common Header ---
+
+
+print_tool_setup_start "Neovim"
+
 # This script sets up Neovim with the desired plugins and configurations.
 
 # Create the necessary directories for Neovim configuration
@@ -44,4 +63,5 @@ fi
 # Install plugins
 nvim --headless +PackerSync +qa
 
-echo "Neovim setup complete!"
+
+print_tool_setup_complete "Neovim"

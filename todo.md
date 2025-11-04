@@ -16,3 +16,11 @@ This is a list of items I would like to get worked into my dotfiles
 - [ ] OpenVPN (or get NordVPN working)
 - [ ] BitWarden
 - [ ] Steam
+
+# Shell Tooling
+- [ ] fzf
+- [ ] Zoxide
+- [ ] ripgrep
+- [ ] eza (alias it as 'ls', 'lta' should list it as two levels deep of nestingn, 'lsa' should give me a listing including hidden files, 'lta' is nested listing files)
+- [ ] fd
+
