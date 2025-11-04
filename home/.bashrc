@@ -27,3 +27,5 @@ fi
 if [ -f "$HOME/.profile" ]; then
     . "$HOME/.profile"
 fi
+
+eval "$(starship init bash)"

@@ -1,6 +1,8 @@
 #!/bin/bash
 
-# --- Import Common Header --- 
+# --------------------------
+# Import Common Header 
+# --------------------------
 
 # add header file
 CURRENT_FILE_DIR="$(cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd)"
@@ -14,7 +16,10 @@ else
   exit 1
 fi
 
-# --- End Import Common Header ---
+# --------------------------
+# End Import Common Header 
+# --------------------------
+
 print_tool_setup_start "Zsh + Oh My Zsh + Powerlevel10k"
 
 # Install Zsh if not already installed

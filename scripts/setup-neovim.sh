@@ -1,6 +1,8 @@
 #!/bin/bash
 
-# --- Import Common Header --- 
+# --------------------------
+# Import Common Header 
+# --------------------------
 
 # add header file
 CURRENT_FILE_DIR="$(cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd)"
@@ -14,54 +16,46 @@ else
   exit 1
 fi
 
-# --- End Import Common Header ---
+# --------------------------
+# End Import Common Header 
+# --------------------------
 
 
 print_tool_setup_start "Neovim"
 
 # This script sets up Neovim with the desired plugins and configurations.
 
+# Check if Neovim is installed
+if ! command -v nvim &> /dev/null; then
+  print_info_message "Neovim is not installed. Installing Neovim."
+  sudo apt install -y neovim
+else
+  print_info_message "Neovim is already installed. Skipping installation."
+fi
+
+# install lazy neovim setup
+if [ ! -f "$HOME/.config/nvim/lua/config/lazy.lua" ]; then
+  print_info_message "Installing Lazy.nvim"
+  # required
+  print_info_message "Backing up existing Neovim configuration if it exists."
+  mv ~/.config/nvim{,.bak}
+
+  # optional but recommended
+  mv ~/.local/share/nvim{,.bak}
+  mv ~/.local/state/nvim{,.bak}
+  mv ~/.cache/nvim{,.bak}
+
+  git clone https://github.com/LazyVim/starter ~/.config/nvim
+
+  rm -rf ~/.config/nvim/.git
+
+  print_action_message "Start nvim and then run ':LazyHealth' to check if everything is set up correctly."
+
+else
+  print_info_message "Lazy.nvim is already installed. Skipping installation."
+fi
+
 # Create the necessary directories for Neovim configuration
 mkdir -p ~/.config/nvim/lua/plugins
-
-# Install Packer.nvim for managing Neovim plugins
-if [ ! -d "~/.local/share/nvim/site/pack/packer/start/packer.nvim" ]; then
-  git clone --depth 1 https://github.com/wbthomason/packer.nvim \
-    ~/.local/share/nvim/site/pack/packer/start/packer.nvim
-fi
-
-# Create a basic init.lua configuration if it doesn't exist
-if [ ! -f ~/.config/nvim/init.lua ]; then
-  cat <<EOL > ~/.config/nvim/init.lua
--- Neovim configuration file
-
--- Load plugins
-require('plugins')
-
--- Basic settings
-vim.o.number = true
-vim.o.relativenumber = true
-vim.o.expandtab = true
-vim.o.shiftwidth = 2
-vim.o.tabstop = 2
-EOL
-fi
-
-# Create a basic plugins.lua file if it doesn't exist
-if [ ! -f ~/.config/nvim/lua/plugins/init.lua ]; then
-  cat <<EOL > ~/.config/nvim/lua/plugins/init.lua
--- Plugin management with Packer
-require('packer').startup(function(use)
-  use 'wbthomason/packer.nvim' -- Package manager
-
-  -- Add your plugins here
-  -- Example: use 'nvim-treesitter/nvim-treesitter'
-end)
-EOL
-fi
-
-# Install plugins
-nvim --headless +PackerSync +qa
-
 
 print_tool_setup_complete "Neovim"

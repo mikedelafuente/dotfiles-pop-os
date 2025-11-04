@@ -20,10 +20,16 @@ fi
 # End Import Common Header 
 # --------------------------
 
-print_tool_setup_start "NVM and Node.js"
 
-# Install Nnvm (Node Version Manager) and the latest LTS version of Node.js
-print_line_break "Installing NVM (Node Version Manager)"
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+print_tool_setup_start "Rust and Cargo"
 
-print_tool_setup_complete "NVM and Node.js"
+# Install Rust and Cargo if not already installed
+if ! command -v cargo &> /dev/null; then
+    print_info_message "Installing Rust and Cargo"
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+    source "$HOME/.cargo/env"
+else
+    print_info_message "Rust and Cargo are already installed. Skipping installation."
+fi
+
+print_tool_setup_complete "Rust and Cargo"  

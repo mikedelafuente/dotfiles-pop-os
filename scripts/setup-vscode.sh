@@ -20,10 +20,14 @@ fi
 # End Import Common Header 
 # --------------------------
 
-print_tool_setup_start "NVM and Node.js"
+print_tool_setup_start "VS Code"
 
-# Install Nnvm (Node Version Manager) and the latest LTS version of Node.js
-print_line_break "Installing NVM (Node Version Manager)"
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+# Install Visual Studio Code if not already installed
+if ! command -v code &> /dev/null; then
+    print_info_message "Installing VS Code"
+    sudo snap install --classic code
+else
+    print_info_message "VS Code is already installed. Skipping installation."
+fi
 
-print_tool_setup_complete "NVM and Node.js"
+print_tool_setup_complete "VS Code"

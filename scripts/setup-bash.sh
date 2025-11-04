@@ -1,6 +1,8 @@
 #!/bin/bash
 
-# --- Import Common Header --- 
+# --------------------------
+# Import Common Header 
+# --------------------------
 
 # add header file
 CURRENT_FILE_DIR="$(cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd)"
@@ -14,7 +16,10 @@ else
   exit 1
 fi
 
-# --- End Import Common Header ---
+# --------------------------
+# End Import Common Header 
+# --------------------------
+
 print_tool_setup_start "Bash"
 # Install Bash if not already installed
 if ! command -v bash &> /dev/null; then
@@ -31,6 +36,14 @@ if [ "$SHELL" != "$(which bash)" ]; then
     chsh -s "$(which bash)"
 else
     print_info_message "Bash is already the default shell. Skipping change."
+fi
+
+# install Starship prompt for Bash
+if ! command -v starship &> /dev/null; then
+    print_info_message "Installing Starship prompt for Bash"
+    curl -fsSL https://starship.rs/install.sh | sh -s -- -y
+else
+    print_info_message "Starship prompt is already installed. Skipping installation."
 fi
 
 print_tool_setup_complete "Bash"

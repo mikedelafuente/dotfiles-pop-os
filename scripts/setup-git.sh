@@ -1,6 +1,8 @@
 #!/bin/bash
 
-# --- Import Common Header --- 
+# --------------------------
+# Import Common Header 
+# --------------------------
 
 # add header file
 CURRENT_FILE_DIR="$(cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd)"
@@ -14,12 +16,42 @@ else
   exit 1
 fi
 
-# --- End Import Common Header ---
+# --------------------------
+# End Import Common Header 
+# --------------------------
+
+# --------------------------
+# See if username and email were passed as arguments
+# --------------------------
+USERNAME_ARG="$1"
+EMAIL_ARG="$2"
+
+# if not passed as arguments, then ask for them
+if [ -z "$USERNAME_ARG" ]; then
+    read -rp "Enter your full name for git commit history: " USERNAME_ARG
+fi
+
+if [ -z "$EMAIL_ARG" ]; then
+    read -rp "Enter your email for git commit history: " EMAIL_ARG
+fi
+
+if [ -z "$USERNAME_ARG" ] || [ -z "$EMAIL_ARG" ]; then
+    print_error_message "Both full name and email address are required to set up Git."
+    exit 1
+fi
+
+# --------------------------
+# End check for username and email arguments
+# --------------------------
+
+# --------------------------
+# Set up Git configuration
+# --------------------------
 
 print_tool_setup_start "Git"
 
-git config --global user.name "Mike de la Fuente"
-git config --global user.email "mike.delafuente@gmail.com"
+git config --global user.name "$USERNAME_ARG"
+git config --global user.email "$EMAIL_ARG"
 git config --global core.editor "nvim"
 git config --global init.defaultBranch main
 
@@ -30,8 +62,8 @@ if [ -f ~/.ssh/id_ed25519 ]; then
 else
     echo "Generating new SSH key."
 
-    # Create SSH keys for GitHub using Ed25519
-    ssh-keygen -t ed25519 -C "mike.delafuente@gmail.com" -f ~/.ssh/id_ed25519 -N ""
+    # Create SSH keys for GitHub using Ed25519 without passphrase
+    ssh-keygen -t ed25519 -C "$EMAIL_ARG" -f ~/.ssh/id_ed25519 -N ""
     # Add SSH key to ssh-agent
     eval "$(ssh-agent -s)"
     ssh-add ~/.ssh/id_ed25519

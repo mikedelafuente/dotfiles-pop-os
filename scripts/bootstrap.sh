@@ -1,4 +1,18 @@
 #!/bin/bash
+# -------------------------
+# Bootstrap Script for Pop!_OS
+# -------------------------
+
+# --------------------------
+# Configuration
+# --------------------------  
+FULL_NAME="Mike de la Fuente"
+EMAIL_ADDRESS="mike.delafuente@gmail.com"
+DOTNET_CORE_SDK_VERSION="9.0"
+
+# --------------------------
+# Start of Script
+# --------------------------
 
 echo "Starting bootstrap process... pwd is $(pwd)"
 echo "Display server protocol: $XDG_SESSION_TYPE"
@@ -7,7 +21,10 @@ echo "Home directory: $HOME"
 echo "Shell: $SHELL"
 echo "Script directory: $(dirname -- "${BASH_SOURCE[0]}")"
 echo "----------------------------------------"
-# --- Import Common Header --- 
+
+# --------------------------
+# Import Common Header 
+# --------------------------
 
 # add header file
 CURRENT_FILE_DIR="$(cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd)"
@@ -21,24 +38,12 @@ else
   exit 1
 fi
 
-# --- End Import Common Header ---
+# --------------------------
+# End Import Common Header 
+# --------------------------
 
 # Allow for optional flags of whether to use zsh or bash for the default shell
 DF_SCRIPT_DIR="$CURRENT_FILE_DIR"
-FORCE_SHELL="bash"
-while [[ $# -gt 0 ]]; do
-  case $1 in
-    --zsh)
-      FORCE_SHELL="zsh"
-      shift
-      ;;
-    *)
-      echo "Unknown option: $1"
-      exit 1
-      ;;
-  esac
-done    
-
 
 # Update package list and upgrade installed packages
 print_line_break "Updating packages"
@@ -67,34 +72,44 @@ fi
 
 # Install essential packages
 print_line_break "Installing essential packages"
-sudo apt install -y git zsh neovim openvpn 
+sudo apt install -y git curl wget 
 
-# Install additional tools
-print_line_break "Installing additional tools"
-sudo apt install -y curl wget
+# Set up Git configuration
+sudo bash "$DF_SCRIPT_DIR/setup-git.sh" "$FULL_NAME" "$EMAIL_ADDRESS"
 
 # Setup Fonts
 sudo bash "$DF_SCRIPT_DIR/setup-fonts.sh"
 
-# Setup Zsh with Oh My Zsh and Powerlevel10k
-if [ "$FORCE_SHELL" = "zsh" ]; then
-  sudo bash "$DF_SCRIPT_DIR/setup-zsh.sh"
-else
-  sudo bash "$DF_SCRIPT_DIR/setup-bash.sh"
-fi
+# Setup Bash
+sudo bash "$DF_SCRIPT_DIR/setup-bash.sh"
+
+# Before setting up Alacritty, ensure Rust is installed
+sudo bash "$DF_SCRIPT_DIR/setup-rust.sh"
+
+# Before setting up Alacritty, ensure that VS Code is installed
+sudo bash "$DF_SCRIPT_DIR/setup-vscode.sh"
 
 # Setup a terminal emulator - Alacritty in this case
 sudo bash "$DF_SCRIPT_DIR/setup-alacritty.sh"
+
+# Setup Neovim and Lazyvim
+sudo bash "$DF_SCRIPT_DIR/setup-neovim.sh"
+
+# Setup Mullvad VPN
+sudo bash "$DF_SCRIPT_DIR/setup-mullvad.sh"
 
 # run the setup-docker.sh script to set up Docker using sudo rights
 # Make sure to run the setup docker.sh script from the correct path - which should be the same directory as this script
 sudo bash "$DF_SCRIPT_DIR/setup-docker.sh"
 
-# Set up Git configuration
-sudo bash "$DF_SCRIPT_DIR/setup-git.sh"
-
 # Install Node.js and npm
 sudo bash "$DF_SCRIPT_DIR/setup-node.sh"
+
+# Install .NET SDK and Rider
+sudo bash "$DF_SCRIPT_DIR/setup-dotnet-rider.sh" "$DOTNET_CORE_SDK_VERSION"
+
+# Link configuration files
+sudo bash "$DF_SCRIPT_DIR/link-dotfiles.sh"
 
 # Clean up
 print_line_break "Cleaning up"

@@ -1,6 +1,8 @@
 #!/bin/bash
 
-# --- Import Common Header --- 
+# --------------------------
+# Import Common Header 
+# --------------------------
 
 # add header file
 CURRENT_FILE_DIR="$(cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd)"
@@ -14,17 +16,11 @@ else
   exit 1
 fi
 
-# --- End Import Common Header ---
-print_tool_setup_start "Alacritty"
+# --------------------------
+# End Import Common Header 
+# --------------------------
 
-# Install Alacritty dependencies
-#print_info_message "Installing Alacritty dependencies"
- 
- # Install rust and cargo if not already installed
-# if ! command -v cargo &> /dev/null; then
-#     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-#     source "$HOME/.cargo/env"
-# fi
+print_tool_setup_start "Alacritty"
 
 # Leverage snapd to install Alacritty
 if ! command -v alacritty &> /dev/null; then
@@ -35,11 +31,22 @@ else
 fi
 
 # Set the default terminal emulator to Alacritty
-if [ "$TERM_PROGRAM" != "alacritty" ]; then
+
+# Read the current default terminal emulator
+current_terminal=$(readlink /etc/alternatives/x-terminal-emulator)
+alacritty_path=$(which alacritty)
+
+print_info_message "Current default terminal emulator: $current_terminal"
+
+if [ "$current_terminal" != "$alacritty_path" ]; then
     print_info_message "Setting Alacritty as the default terminal emulator"
+    
     # Update alternatives to set Alacritty as the default terminal
-    sudo update-alternatives --install /usr/bin/x-terminal-emulator x-terminal-emulator "$(which alacritty)" 50
-    sudo update-alternatives --set x-terminal-emulator "$(which alacritty)"
+    sudo update-alternatives --install /usr/bin/x-terminal-emulator x-terminal-emulator "$alacritty_path" 50
+    sudo update-alternatives --set x-terminal-emulator "$alacritty_path"
+
+    print_info_message "New default terminal emulator: $(readlink /etc/alternatives/x-terminal-emulator)"
+a
 else
     print_info_message "Alacritty is already the default terminal emulator. Skipping change."
 fi  
