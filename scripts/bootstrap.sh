@@ -25,11 +25,11 @@ fi
 
 # Allow for optional flags of whether to use zsh or bash for the default shell
 DF_SCRIPT_DIR="$CURRENT_FILE_DIR"
-FORCE_SHELL="zsh"
+FORCE_SHELL="bash"
 while [[ $# -gt 0 ]]; do
   case $1 in
-    --bash)
-      FORCE_SHELL="bash"
+    --zsh)
+      FORCE_SHELL="zsh"
       shift
       ;;
     *)

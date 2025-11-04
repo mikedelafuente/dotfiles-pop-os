@@ -18,17 +18,18 @@ fi
 print_tool_setup_start "Alacritty"
 
 # Install Alacritty dependencies
-print_info_message "Installing Alacritty dependencies"
+#print_info_message "Installing Alacritty dependencies"
  
  # Install rust and cargo if not already installed
-if ! command -v cargo &> /dev/null; then
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-    source "$HOME/.cargo/env"
-fi
+# if ! command -v cargo &> /dev/null; then
+#     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+#     source "$HOME/.cargo/env"
+# fi
 
-# Leverage cargo to install Alacritty
+# Leverage snapd to install Alacritty
 if ! command -v alacritty &> /dev/null; then
-    sudo apt install snapd
+    print_info_message "Installing Alacritty via snap"
+    sudo snap install alacritty --classic
 else
     print_info_message "Alacritty is already installed. Skipping installation."
 fi
