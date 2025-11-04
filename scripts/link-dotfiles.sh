@@ -37,10 +37,6 @@ for file in .bashrc .profile .gitconfig .gitignore_global; do
   source_file="$DOTFILES_HOME_DIR/$file"
   
   # Add debug output to your script
-  echo "DOTFILES_HOME_DIR: $DOTFILES_HOME_DIR"
-  echo "Source file: $source_file"
-  echo "Target: $target"
-
   if [ -e "$target" ] && [ ! -L "$target" ]; then
     echo "Warning: $target exists and is not a symlink."
     echo "Backing up existing $target to $target.backup"
@@ -58,6 +54,7 @@ CONFIG_TARGET_DIR="$USER_HOME_DIR/.config"
 mkdir -p "$CONFIG_TARGET_DIR"
 
 find "$CONFIG_SOURCE_DIR" -type f | while read -r file; do
+  echo "Processing .config folder: $file"
   relative_path="${file#$CONFIG_SOURCE_DIR/}"
   target="$CONFIG_TARGET_DIR/$relative_path"
   source_file="$file"

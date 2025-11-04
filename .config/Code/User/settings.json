@@ -5,6 +5,7 @@
     "editor.tabSize": 4,
     "editor.insertSpaces": true,
     "explorer.confirmDelete": false,
+    "editor.fontFamily": "Hack Nerd Font Mono, FiraCode Nerd Font Mono, JetBrainsMono Nerd Font, MeslogLGM Nerd Font, Consolas, 'Courier New', monospace",
     "files.autoSave": "onWindowChange",
     "files.exclude": {
         "**/.git": true,
