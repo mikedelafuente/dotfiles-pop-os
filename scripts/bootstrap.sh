@@ -213,6 +213,9 @@ bash "$DF_SCRIPT_DIR/setup-obsidian.sh"
 # Link configuration files
 bash "$DF_SCRIPT_DIR/link-dotfiles.sh"
 
+# Configure the current Ubuntu/Pop!_OS environment
+bash "$DF_SCRIPT_DIR/setup-ubuntu-env.sh"
+
 # Clean up
 print_line_break "Cleaning up"
 sudo apt autoremove -y

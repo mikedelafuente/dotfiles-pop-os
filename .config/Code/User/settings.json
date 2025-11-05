@@ -17,5 +17,6 @@
     "git.confirmSync": false,
     "github.copilot.nextEditSuggestions.enabled": true,
     "window.zoomLevel": 0,
-    "terminal.integrated.defaultProfile.linux": "bash"
+    "terminal.integrated.defaultProfile.linux": "bash",
+    "git.autofetch": true
 }
