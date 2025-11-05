@@ -55,7 +55,7 @@ if ! command -v godot &> /dev/null; then
 
   # check if the VERSIONED_DIR exists
   if [ -d "$VERSIONED_DIR" ]; then
-  print_info_message "Godot versioned directory $VERSIONED_DIR already exists. Skipping download."
+    print_info_message "Godot versioned directory $VERSIONED_DIR already exists. Skipping download."
   else
     echo "Creating Godot versioned directory at $VERSIONED_DIR"
 
@@ -75,29 +75,29 @@ if ! command -v godot &> /dev/null; then
   fi      
 
 
-    #List the files in the versioned directory and grab the binary name that ends with .x86_64
-    # GODOT_BINARY_NAME=$(ls "$VERSIONED_DIR" | grep -E 'Godot_v.*_mono_linux_x86_64$')
+  #List the files in the versioned directory and grab the binary name that ends with .x86_64
+  # GODOT_BINARY_NAME=$(ls "$VERSIONED_DIR" | grep -E 'Godot_v.*_mono_linux_x86_64$')
 
-    # Find the Godot binary reliably (match executable files created by the zip)
-    GODOT_BINARY_PATH="$(find "$VERSIONED_DIR" -maxdepth 2 -type f -executable -iname 'godot*' -print -quit || true)"
+  # Find the Godot binary reliably (match executable files created by the zip)
+  GODOT_BINARY_PATH="$(find "$VERSIONED_DIR" -maxdepth 2 -type f -executable -iname 'godot*' -print -quit || true)"
 
-    # fallback: look for any file with "Godot" in name (some builds use different case/sep)
-    if [ -z "${GODOT_BINARY_PATH:-}" ]; then
-        GODOT_BINARY_PATH="$(find "$VERSIONED_DIR" -maxdepth 2 -type f -print | grep -Ei 'godot|Godot' | head -n1 || true)"
-    fi
+  # fallback: look for any file with "Godot" in name (some builds use different case/sep)
+  if [ -z "${GODOT_BINARY_PATH:-}" ]; then
+      GODOT_BINARY_PATH="$(find "$VERSIONED_DIR" -maxdepth 2 -type f -print | grep -Ei 'godot|Godot' | head -n1 || true)"
+  fi
 
-    if [ -z "${GODOT_BINARY_PATH:-}" ]; then
-        print_error_message "Could not locate Godot binary in $VERSIONED_DIR"
-        exit 1
-    fi
+  if [ -z "${GODOT_BINARY_PATH:-}" ]; then
+      print_error_message "Could not locate Godot binary in $VERSIONED_DIR"
+      exit 1
+  fi
 
 
-    echo "Godot binary name: $GODOT_BINARY_NAME"
+  echo "Godot binary name: $GODOT_BINARY_PATH"
 
-    mkdir -p "${USER_HOME_DIR}/.local/bin"
-    ln -sf "$GODOT_BINARY_PATH" "${USER_HOME_DIR}/.local/bin/godot4"
-    chmod +x "$GODOT_BINARY_PATH" "${USER_HOME_DIR}/.local/bin/godot4"
-    echo "Linked $GODOT_BINARY_PATH -> ${USER_HOME_DIR}/.local/bin/godot4"
+  mkdir -p "${USER_HOME_DIR}/.local/bin"
+  ln -sf "$GODOT_BINARY_PATH" "${USER_HOME_DIR}/.local/bin/godot4"
+  sudo chmod +x "$GODOT_BINARY_PATH" "${USER_HOME_DIR}/.local/bin/godot4"
+  echo "Linked $GODOT_BINARY_PATH -> ${USER_HOME_DIR}/.local/bin/godot4"
 
 else
     print_info_message "Godot 4 Mono is already installed. Skipping installation."
