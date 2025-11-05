@@ -4,11 +4,72 @@
 # -------------------------
 
 # --------------------------
-# Configuration
-# --------------------------  
-FULL_NAME="Mike de la Fuente"
-EMAIL_ADDRESS="mike.delafuente@gmail.com"
-DOTNET_CORE_SDK_VERSION="9.0"
+# Variables to be kept in ~/.dotfiles_bootstrap_config and loaded from there
+# --------------------------
+
+# determine if we are running in sudo, and if so get the actual users home directory
+if [ "$(whoami)" != "${SUDO_USER:-$(whoami)}" ]; then
+    USER_HOME_DIR=$(eval echo ~${SUDO_USER})
+else
+    USER_HOME_DIR="$HOME"
+fi
+
+# Read in input from the user the first time to get their full name, email address, and offer up that dotnet core 9.0 will be used
+
+if [ -r "$USER_HOME_DIR/.dotfiles_bootstrap_config" ]; then
+  # shellcheck source=/dev/null
+  source "$USER_HOME_DIR/.dotfiles_bootstrap_config"
+fi
+
+  # Source the config or read it line by line
+  # We just need the full name, email address and dotnet version to be either read in or prompt the user if it isn't set and then write the file. Offer up that the default value is what is currently set. If they press enter, then the existing value will be used unless there is no current value, in which case we will not display the current value.
+
+  if [ -z "$FULL_NAME" ]; then
+    read -rp "Enter your full name (e.g., John Doe): " FULL_NAME
+  else
+    read -rp "Enter your full name (e.g., John Doe) [$FULL_NAME]: " INPUT_FULL_NAME
+    if [ -n "$INPUT_FULL_NAME" ]; then
+      FULL_NAME="$INPUT_FULL_NAME"
+    fi
+  fi
+  if [ -z "$EMAIL_ADDRESS" ]; then
+    read -rp "Enter your email address (e.g., john.doe@example.com): " EMAIL_ADDRESS
+  else
+    read -rp "Enter your email address (e.g., john.doe@example.com) [$EMAIL_ADDRESS]: " INPUT_EMAIL_ADDRESS
+    if [ -n "$INPUT_EMAIL_ADDRESS" ]; then
+      EMAIL_ADDRESS="$INPUT_EMAIL_ADDRESS"
+    fi
+  fi
+
+  if [ -z "$DOTNET_CORE_SDK_VERSION" ]; then
+    read -rp "Enter the .NET Core SDK version to install (e.g., 9.0): " DOTNET_CORE_SDK_VERSION
+  else
+    read -rp "Enter the .NET Core SDK version to install (e.g., 9.0) [$DOTNET_CORE_SDK_VERSION]: " INPUT_DOTNET_CORE_SDK_VERSION
+    if [ -n "$INPUT_DOTNET_CORE_SDK_VERSION" ]; then
+      DOTNET_CORE_SDK_VERSION="$INPUT_DOTNET_CORE_SDK_VERSION"
+    fi
+  fi
+
+# Let the user validate the variables and if they are correct, write the config file
+  echo "Please confirm the following information:"
+  echo "Full Name: $FULL_NAME"
+  echo "Email Address: $EMAIL_ADDRESS"
+  echo ".NET Core SDK Version: $DOTNET_CORE_SDK_VERSION"
+  read -rp "Is this information correct? (y/n): " CONFIRMATION
+  if [[ ! "$CONFIRMATION" =~ ^[Yy]$ ]]; then
+    echo "Aborting. Please run the script again to enter the correct information."
+    exit 1
+  fi
+
+  # Now write the config file
+  {
+    echo "# Configuration file for dotfiles bootstrap script"
+    echo "FULL_NAME=\"$FULL_NAME\""
+    echo "EMAIL_ADDRESS=\"$EMAIL_ADDRESS\""
+    echo "DOTNET_CORE_SDK_VERSION=\"$DOTNET_CORE_SDK_VERSION\""
+  } > "$USER_HOME_DIR/.dotfiles_bootstrap_config"
+
+
 
 # --------------------------
 # Start of Script
