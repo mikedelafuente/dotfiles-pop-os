@@ -147,7 +147,7 @@ else
 fi
 
 # Install essential packages
-ESSENTIAL_PACKAGES=(git curl wget)
+ESSENTIAL_PACKAGES=(snapd git curl wget)
 print_line_break "Installing essential packages"
 for package in "${ESSENTIAL_PACKAGES[@]}"; do
     if ! dpkg -s "$package" &> /dev/null; then
