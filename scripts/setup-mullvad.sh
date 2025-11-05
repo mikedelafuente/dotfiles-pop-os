@@ -33,7 +33,7 @@ if ! command -v mullvad &> /dev/null; then
     echo "deb [signed-by=/usr/share/keyrings/mullvad-keyring.asc arch=$( dpkg --print-architecture )] https://repository.mullvad.net/deb/stable stable main" | sudo tee /etc/apt/sources.list.d/mullvad.list
 
     # Install the package
-    # sudo apt update # This should have already been done in the bootstrap script
+    sudo apt update # This should have already been done in the bootstrap script
     sudo apt install -y mullvad-vpn
 else
     print_info_message "Mullvad VPN is already installed. Skipping installation."
