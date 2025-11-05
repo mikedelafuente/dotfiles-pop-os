@@ -32,8 +32,9 @@ fi
 
 # Set Bash as the default shell
 if [ "$SHELL" != "$(which bash)" ]; then
-    print_info_message "Changing default shell to bash"
-    chsh -s "$(which bash)"
+    current_shell=$(which bash)
+    print_info_message "Changing default shell ($SHELL) to bash ($current_shell)"
+    chsh -s "$current_shell"
 else
     print_info_message "Bash is already the default shell. Skipping change."
 fi

@@ -27,6 +27,15 @@ for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker c
   sudo apt-get remove -y --purge "$pkg" || true
 done
 
+# Check to see if the newer Docker packages are already installed
+if command -v docker >/dev/null 2>&1 && docker --version >/dev/null 2>&1; then
+  print_info_message "Docker is already installed. Skipping installation."
+  print_tool_setup_complete "Docker"
+  exit 0
+else
+  print_info_message "Docker not found or not working. Proceeding with installation."
+fi
+
 # Add Docker's official GPG key:
 sudo apt-get update
 sudo apt-get install -y ca-certificates curl

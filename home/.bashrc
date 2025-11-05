@@ -41,6 +41,7 @@ alias gp='git pull'
 alias gc='git commit'
 alias gco='git checkout'
 
+
 # Enable color support for ls and grep
 export CLICOLOR=1
 export LSCOLORS=GxFxCxDxBxegedabagacad
@@ -61,6 +62,6 @@ if [ -f "$HOME/.cargo/env" ]; then
 fi
 
 # NVM (Node Version Manager) setup
-export NVM_DIR="$HOME/.nvm"
+export NVM_DIR="$HOME/.config/nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

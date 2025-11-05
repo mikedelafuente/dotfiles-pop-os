@@ -22,8 +22,22 @@ fi
 
 print_tool_setup_start "NVM and Node.js"
 
-# Install Nnvm (Node Version Manager) and the latest LTS version of Node.js
-print_line_break "Installing NVM (Node Version Manager)"
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+# Install Nnvm (Node Version Manager) and the latest LTS version of Node.js 
+
+# only if NVM is not already installed or there is no
+if command -v nvm &> /dev/null; then
+print_info_message "NVM is not installed. Proceeding with installation."
+  
+    # Unset any existing NVM_DIR to avoid conflicts
+    unset NVM_DIR
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+   
+else
+    print_info_message "NVM is already installed. Skipping installation."
+    # Load NVM
+    export NVM_DIR="$USER_HOME_DIR/.config/nvm"
+    # shellcheck source=/dev/null
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+fi
 
 print_tool_setup_complete "NVM and Node.js"

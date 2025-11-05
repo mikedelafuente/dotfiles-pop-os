@@ -57,33 +57,45 @@ fi
 DF_SCRIPT_DIR="$CURRENT_FILE_DIR"
 
 # Update package list and upgrade installed packages
-print_line_break "Updating packages"
-sudo apt update
+# Check how recent the last update was
 
-print_line_break "Upgrading packages"
-sudo apt upgrade -y
-
-# Install snapd if necessary and request a restart
-print_line_break "Installing snapd"
-if ! command -v snap &> /dev/null; then
-    print_info_message "Installing snapd"
-    sudo apt install -y snapd
-    print_info_message "snapd installed. A system restart is recommended to ensure snapd functions correctly."
-    read -p "Would you like to restart now? (y/n): " RESTART_CHOICE
-    if [[ "$RESTART_CHOICE" =~ ^[Yy]$ ]]; then
-        print_info_message "Restarting system..."
-        sudo reboot
-    else
-        print_info_message "Exiting. Please remember to restart your system later to ensure snapd functions correctly."
-        exit 0
-    fi
+LAST_APT_UPDATE=$(cat "$USER_HOME_DIR/.last_apt_update" 2>/dev/null || echo 0)
+CURRENT_TIME=$(date +%s)
+TIME_DIFF=$((CURRENT_TIME - LAST_APT_UPDATE))
+# If more than 1 day (86400 seconds) has passed since the last update, perform update
+if [ "$TIME_DIFF" -lt 86400 ]; then
+    print_info_message "Last apt update was less than a day ago. Skipping update."
 else
-    print_info_message "snapd is already installed. Skipping installation."  
+    print_info_message "Last apt update was more than a day ago. Performing update."
+    sudo apt update
+    # Write a file to ~/.last_apt_update with the current timestamp - completely overwrite any existing file
+    echo "$(date +%s)" > "$USER_HOME_DIR/.last_apt_update"
+fi
+
+LAST_APT_UPGRADE=$(cat "$USER_HOME_DIR/.last_apt_upgrade" 2>/dev/null || echo 0)
+CURRENT_TIME=$(date +%s)
+TIME_DIFF=$((CURRENT_TIME - LAST_APT_UPGRADE))
+# If more than 1 days (86400 seconds) has passed since the last upgrade, perform upgrade
+if [ "$TIME_DIFF" -lt 86400 ]; then
+    print_info_message "Last apt upgrade was less than a day ago. Skipping upgrade."
+else
+    print_info_message "Last apt upgrade was more than a day ago. Performing upgrade."
+    sudo apt upgrade -y
+  # Write a file to ~/.last_apt_upgrade with the current timestamp
+  echo "$(date +%s)" > "$USER_HOME_DIR/.last_apt_upgrade"
 fi
 
 # Install essential packages
+ESSENTIAL_PACKAGES=(git curl wget)
 print_line_break "Installing essential packages"
-sudo apt install -y git curl wget 
+for package in "${ESSENTIAL_PACKAGES[@]}"; do
+    if ! dpkg -s "$package" &> /dev/null; then
+        print_info_message "Installing $package"
+        sudo apt install -y "$package"
+    else
+        print_info_message "$package is already installed. Skipping installation."
+    fi
+done
 
 # Set up Git configuration
 bash "$DF_SCRIPT_DIR/setup-git.sh" "$FULL_NAME" "$EMAIL_ADDRESS"
@@ -118,6 +130,24 @@ bash "$DF_SCRIPT_DIR/setup-node.sh"
 
 # Install .NET SDK and Rider
 bash "$DF_SCRIPT_DIR/setup-dotnet-rider.sh" "$DOTNET_CORE_SDK_VERSION"
+
+# Install Godot 4 Mono
+bash "$DF_SCRIPT_DIR/setup-godot.sh"
+
+# Install Postman
+bash "$DF_SCRIPT_DIR/setup-postman.sh"
+
+# Install Steam
+bash "$DF_SCRIPT_DIR/setup-steam.sh"
+
+# Install Discord
+bash "$DF_SCRIPT_DIR/setup-discord.sh"
+
+# Install Spotify
+bash "$DF_SCRIPT_DIR/setup-spotify.sh"
+
+# Install Obsidian
+bash "$DF_SCRIPT_DIR/setup-obsidian.sh"
 
 # Link configuration files
 bash "$DF_SCRIPT_DIR/link-dotfiles.sh"
