@@ -28,7 +28,11 @@ print_tool_setup_start "Neovim"
 # Check if Neovim is installed
 if ! command -v nvim &> /dev/null; then
   print_info_message "Neovim is not installed. Installing Neovim."
-  sudo apt install -y neovim
+  # Neovim has been added to a "Personal Package Archive" (PPA). This allows you to install it with apt-get. Follow the links to the PPAs to see which versions of Ubuntu are currently available via the PPA.
+  # sudo apt-get install software-properties-common
+  sudo add-apt-repository ppa:neovim-ppa/stable
+  sudo apt-get update
+  sudo apt-get install -y neovim
 else
   print_info_message "Neovim is already installed. Skipping installation."
 fi
