@@ -35,6 +35,7 @@ fi
 
 
 # Aliases
+alias ls='ls --color=auto'
 alias ll='ls -la'
 alias gs='git status'
 alias gp='git pull'
