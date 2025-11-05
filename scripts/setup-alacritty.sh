@@ -46,7 +46,6 @@ if [ "$current_terminal" != "$alacritty_path" ]; then
     sudo update-alternatives --set x-terminal-emulator "$alacritty_path"
 
     print_info_message "New default terminal emulator: $(readlink /etc/alternatives/x-terminal-emulator)"
-a
 else
     print_info_message "Alacritty is already the default terminal emulator. Skipping change."
 fi  
