@@ -26,6 +26,13 @@ fi
 
 print_line_break "Installing Discord"
 
+# Determine if Discord is already installed
+if command -v discord &> /dev/null; then
+    print_info_message "Discord is already installed. Skipping installation."
+    print_line_break "Discord installation completed."
+    exit 0
+fi
+
 # Download the latest Discord .deb package
 DISCORD_DEB_URL="https://discord.com/api/download?platform=linux&format=deb"
 TEMP_DEB_FILE="/tmp/discord.deb"
