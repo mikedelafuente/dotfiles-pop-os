@@ -216,11 +216,16 @@ bash "$DF_SCRIPT_DIR/setup-zoom.sh"
 # Install Indicator Sound Switcher
 bash "$DF_SCRIPT_DIR/setup-sound-switcher.sh"
 
+# Install Startup Disk Creator
+bash "$DF_SCRIPT_DIR/setup-startup-disk-creator.sh"
+
 # Link configuration files
 bash "$DF_SCRIPT_DIR/link-dotfiles.sh"
 
 # Configure the current Ubuntu/Pop!_OS environment
 bash "$DF_SCRIPT_DIR/setup-ubuntu-env.sh"
+
+
 
 # Clean up
 print_line_break "Cleaning up"
