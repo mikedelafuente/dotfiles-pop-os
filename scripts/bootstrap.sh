@@ -210,6 +210,12 @@ bash "$DF_SCRIPT_DIR/setup-spotify.sh"
 # Install Obsidian
 bash "$DF_SCRIPT_DIR/setup-obsidian.sh"
 
+# Install Zoom
+bash "$DF_SCRIPT_DIR/setup-zoom.sh"
+
+# Install Indicator Sound Switcher
+bash "$DF_SCRIPT_DIR/setup-sound-switcher.sh"
+
 # Link configuration files
 bash "$DF_SCRIPT_DIR/link-dotfiles.sh"
 

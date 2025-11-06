@@ -37,35 +37,50 @@ else
   print_info_message "Neovim is already installed. Skipping installation."
 fi
 
-# install lazy neovim setup
+# Print Neovim version
+print_info_message "Neovim version: $(nvim --version | head -n 1)"
 
-if [ ! -f "$USER_HOME_DIR/.config/nvim/lua/config/lazy.lua" ]; then
-  print_info_message "Installing Lazy.nvim"
-  # required
-  print_info_message "Backing up existing Neovim configuration if it exists."
-  if [ -d "$USER_HOME_DIR/.config/nvim" ] || [ -d "$USER_HOME_DIR/.local/share/nvim" ] || [ -d "$USER_HOME_DIR/.local/state/nvim" ] || [ -d "$USER_HOME_DIR/.cache/nvim" ]; then
-    print_action_message "Backing up existing Neovim configuration directories to *.bak"
-    mv "$USER_HOME_DIR/.config/nvim"{,.bak}
-  fi
+# install lazy neovim setup if neovim is version 0.8 or higher - parse the first two digits of the version number and determine if it is 0.8 or higher (--version returns:
+# NVIM v0.7.2
+# Build type: Release
+# LuaJIT 2.1.0-beta3
+# Compiled by team+vim@tracker.debian.org
 
-  # optional but recommended
-  if [ -d "$USER_HOME_DIR/.local/share/nvim" ]; then
-    mv "$USER_HOME_DIR/.local/share/nvim"{,.bak}
-  fi
-  if [ -d "$USER_HOME_DIR/.local/state/nvim" ]; then
-    mv "$USER_HOME_DIR/.local/state/nvim"{,.bak}
-  fi
-  if [ -d "$USER_HOME_DIR/.cache/nvim" ]; then
-    mv "$USER_HOME_DIR/.cache/nvim"{,.bak}
-  fi  
-
-  git clone https://github.com/LazyVim/starter "$USER_HOME_DIR/.config/nvim"
-  rm -rf "$USER_HOME_DIR/.config/nvim/.git"
-
-  print_action_message "Start nvim and then run ':LazyHealth' to check if everything is set up correctly."
-
+NVIM_VERSION=$(nvim --version | head -n 1 | awk '{print $2}')
+NVIM_MAJOR_VERSION=$(echo "$NVIM_VERSION" | cut -d'.' -f1)
+NVIM_MINOR_VERSION=$(echo "$NVIM_VERSION" | cut -d'.' -f2)  
+if [ "$NVIM_MAJOR_VERSION" -lt 0 ] || { [ "$NVIM_MAJOR_VERSION" -eq 0 ] && [ "$NVIM_MINOR_VERSION" -lt 8 ]; }; then
+  print_error_message "Neovim version is less than 0.8. Please upgrade Neovim to version 0.8 or higher to use Lazy.nvim."
+  exit 0
 else
-  print_info_message "Lazy.nvim is already installed. Skipping installation."
+  if [ ! -f "$USER_HOME_DIR/.config/nvim/lua/config/lazy.lua" ]; then
+    print_info_message "Installing Lazy.nvim"
+    # required
+    print_info_message "Backing up existing Neovim configuration if it exists."
+    if [ -d "$USER_HOME_DIR/.config/nvim" ] || [ -d "$USER_HOME_DIR/.local/share/nvim" ] || [ -d "$USER_HOME_DIR/.local/state/nvim" ] || [ -d "$USER_HOME_DIR/.cache/nvim" ]; then
+      print_action_message "Backing up existing Neovim configuration directories to *.bak"
+      mv "$USER_HOME_DIR/.config/nvim"{,.bak}
+    fi
+
+    # optional but recommended
+    if [ -d "$USER_HOME_DIR/.local/share/nvim" ]; then
+      mv "$USER_HOME_DIR/.local/share/nvim"{,.bak}
+    fi
+    if [ -d "$USER_HOME_DIR/.local/state/nvim" ]; then
+      mv "$USER_HOME_DIR/.local/state/nvim"{,.bak}
+    fi
+    if [ -d "$USER_HOME_DIR/.cache/nvim" ]; then
+      mv "$USER_HOME_DIR/.cache/nvim"{,.bak}
+    fi  
+
+    git clone https://github.com/LazyVim/starter "$USER_HOME_DIR/.config/nvim"
+    rm -rf "$USER_HOME_DIR/.config/nvim/.git"
+
+    print_action_message "Start nvim and then run ':LazyHealth' to check if everything is set up correctly."
+
+  else
+    print_info_message "Lazy.nvim is already installed. Skipping installation."
+  fi
 fi
 
 # Create the necessary directories for Neovim configuration
